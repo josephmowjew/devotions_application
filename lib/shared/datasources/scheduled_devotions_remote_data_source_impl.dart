@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:devotions_app/core/errors/errors_exports.dart';
-import 'package:devotions_app/shared/constrants/scheduled_devotions_urls.dart';
+import 'package:devotions_app/shared/constants/scheduled_devotions_urls.dart';
 import 'package:http/http.dart' as http;
 import 'package:devotions_app/shared/models/scheduled_devotion.dart';
 import 'package:devotions_app/shared/models/scheduled_devotion_create.dart';

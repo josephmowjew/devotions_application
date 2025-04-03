@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:devotions_app/core/errors/errors_exports.dart';
-import 'package:devotions_app/shared/constrants/favorites_urls.dart';
+import 'package:devotions_app/shared/constants/favorites_urls.dart';
 import 'package:http/http.dart' as http;
 import 'package:devotions_app/shared/models/favorite.dart';
 import 'package:devotions_app/shared/models/favorite_create.dart';
