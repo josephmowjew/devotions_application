@@ -52,24 +52,38 @@ class DevotionsPage extends StatelessWidget {
         return bloc;
       },
       child: Scaffold(
+        backgroundColor: Colors.grey.shade50,
         appBar: AppBar(
-          title: const Text('Devotions'),
+          title: Text(
+            'Devotions',
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              color: Colors.indigo.shade900,
+              letterSpacing: 0.5,
+            ),
+          ),
+          centerTitle: false,
+          elevation: 0.5,
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.indigo.shade900,
           actions: [
             IconButton(
-              icon: const Icon(Icons.search),
+              icon: Icon(Icons.search_rounded, color: Colors.indigo.shade800),
               onPressed: () {
                 // Implement search functionality
               },
             ),
             IconButton(
-              icon: const Icon(Icons.filter_list),
+              icon: Icon(
+                Icons.filter_list_rounded,
+                color: Colors.indigo.shade800,
+              ),
               onPressed: () {
                 // Implement filter functionality
               },
             ),
-            // Debug refresh button
             IconButton(
-              icon: const Icon(Icons.refresh),
+              icon: Icon(Icons.refresh_rounded, color: Colors.indigo.shade800),
               onPressed: () {
                 print('📱 DEBUG - Manual refresh triggered');
                 final bloc = context.read<DevotionsBloc>();
@@ -86,7 +100,9 @@ class DevotionsPage extends StatelessWidget {
           onPressed: () {
             // Navigate to create devotion page
           },
-          child: const Icon(Icons.add),
+          backgroundColor: Colors.indigo.shade600,
+          elevation: 2,
+          child: const Icon(Icons.add, color: Colors.white),
         ),
       ),
     );
