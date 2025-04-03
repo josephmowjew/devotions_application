@@ -1,3 +1,5 @@
+import 'dart:developer' as dev;
+
 class DevotionsUrls {
   static const String _baseUrl = 'https://staging-devotion.lyvepulse.com/api';
 
@@ -15,9 +17,14 @@ class DevotionsUrls {
       'page_size': pageSize.toString(),
       if (createdBy != null) 'createdBy': createdBy,
     };
-    return Uri.parse(
-      '$_baseUrl/devotions',
-    ).replace(queryParameters: queryParams).toString();
+    final url =
+        Uri.parse(
+          '$_baseUrl/devotions',
+        ).replace(queryParameters: queryParams).toString();
+
+    // Print URL for debugging
+    dev.log('🔗 DEVOTIONS URL: $url');
+    return url;
   }
 
   static String createDevotion = '$_baseUrl/devotions';
