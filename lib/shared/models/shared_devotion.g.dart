@@ -8,37 +8,37 @@ part of 'shared_devotion.dart';
 
 SharedDevotion _$SharedDevotionFromJson(Map<String, dynamic> json) =>
     SharedDevotion(
-      branchId: json['branchId'] as String?,
-      createdAt: json['createdAt'] as String?,
+      branchId: json['branch_id'] as String?,
+      createdAt: json['created_at'] as String?,
       devotion:
           json['devotion'] == null
               ? null
               : Devotion.fromJson(json['devotion'] as Map<String, dynamic>),
-      devotionId: (json['devotionId'] as num?)?.toInt(),
-      expireDate: json['expireDate'] as String?,
-      expireDefault: (json['expireDefault'] as num?)?.toInt(),
+      devotionId: (json['devotion_id'] as num?)?.toInt(),
+      expireDate: json['expire_date'] as String?,
+      expireDefault: (json['expire_default'] as num?)?.toInt(),
       id: (json['id'] as num?)?.toInt(),
       link: json['link'] as String?,
-      organisationId: (json['organisationId'] as num?)?.toInt(),
-      recipientEmail: json['recipientEmail'] as String?,
-      recipientNumber: json['recipientNumber'] as String?,
-      shareType: json['shareType'] as String?,
-      userId: json['userId'] as String?,
+      organisationId: (json['organisation_id'] as num?)?.toInt(),
+      recipientEmail: json['recipient_email'] as String?,
+      recipientNumber: json['recipient_number'] as String?,
+      shareType: json['share_type'] as String?,
+      userId: json['user_id'] as String?,
     );
 
 Map<String, dynamic> _$SharedDevotionToJson(SharedDevotion instance) =>
     <String, dynamic>{
-      'branchId': instance.branchId,
-      'createdAt': instance.createdAt,
+      'branch_id': instance.branchId,
+      'created_at': instance.createdAt,
       'devotion': instance.devotion?.toJson(),
-      'devotionId': instance.devotionId,
-      'expireDate': instance.expireDate,
-      'expireDefault': instance.expireDefault,
+      'devotion_id': instance.devotionId,
+      'expire_date': instance.expireDate,
+      'expire_default': instance.expireDefault,
       'id': instance.id,
       'link': instance.link,
-      'organisationId': instance.organisationId,
-      'recipientEmail': instance.recipientEmail,
-      'recipientNumber': instance.recipientNumber,
-      'shareType': instance.shareType,
-      'userId': instance.userId,
+      'organisation_id': instance.organisationId,
+      'recipient_email': instance.recipientEmail,
+      'recipient_number': instance.recipientNumber,
+      'share_type': instance.shareType,
+      'user_id': instance.userId,
     };

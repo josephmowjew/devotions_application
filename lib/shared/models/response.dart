@@ -6,17 +6,37 @@ part 'response.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class Response {
-  final dynamic
-  content; // Using dynamic since Swagger doesn't specify content type
+  @JsonKey(name: 'content')
+  final dynamic content; // Using dynamic since Swagger doesn't specify content type
+
+  @JsonKey(name: 'empty')
   final bool? empty;
+
+  @JsonKey(name: 'first')
   final bool? first;
+
+  @JsonKey(name: 'last')
   final bool? last;
+
+  @JsonKey(name: 'number')
   final int? number;
+
+  @JsonKey(name: 'numberOfElements')
   final int? numberOfElements;
+
+  @JsonKey(name: 'pageable')
   final Pageable? pageable;
+
+  @JsonKey(name: 'size')
   final int? size;
+
+  @JsonKey(name: 'sort')
   final Options? sort;
+
+  @JsonKey(name: 'totalElements')
   final int? totalElements;
+
+  @JsonKey(name: 'totalPages')
   final int? totalPages;
 
   Response({

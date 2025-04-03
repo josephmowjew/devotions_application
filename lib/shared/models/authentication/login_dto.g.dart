@@ -7,11 +7,11 @@ part of 'login_dto.dart';
 // **************************************************************************
 
 LoginDto _$LoginDtoFromJson(Map<String, dynamic> json) => LoginDto(
-      username: json['username'] as String,
-      password: json['password'] as String,
-    );
+  username: json['username'] as String,
+  password: json['password'] as String,
+);
 
 Map<String, dynamic> _$LoginDtoToJson(LoginDto instance) => <String, dynamic>{
-      'username': instance.username,
-      'password': instance.password,
-    };
+  'username': instance.username,
+  'password': instance.password,
+};

@@ -7,9 +7,9 @@ part of 'two_factor_dto.dart';
 // **************************************************************************
 
 TwoFactorDto _$TwoFactorDtoFromJson(Map<String, dynamic> json) => TwoFactorDto(
-      username: json['username'] as String,
-      securityCode: json['securityCode'] as String,
-    );
+  username: json['username'] as String,
+  securityCode: json['securityCode'] as String,
+);
 
 Map<String, dynamic> _$TwoFactorDtoToJson(TwoFactorDto instance) =>
     <String, dynamic>{

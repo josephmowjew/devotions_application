@@ -7,24 +7,24 @@ part of 'favorite.dart';
 // **************************************************************************
 
 Favorite _$FavoriteFromJson(Map<String, dynamic> json) => Favorite(
-  branchId: json['branchId'] as String?,
-  createdAt: json['createdAt'] as String?,
+  branchId: json['branch_id'] as String?,
+  createdAt: json['created_at'] as String?,
   devotion:
       json['devotion'] == null
           ? null
           : Devotion.fromJson(json['devotion'] as Map<String, dynamic>),
-  devotionId: (json['devotionId'] as num?)?.toInt(),
+  devotionId: (json['devotion_id'] as num?)?.toInt(),
   id: (json['id'] as num?)?.toInt(),
-  organisationId: (json['organisationId'] as num?)?.toInt(),
-  userId: json['userId'] as String?,
+  organisationId: (json['organisation_id'] as num?)?.toInt(),
+  userId: json['user_id'] as String?,
 );
 
 Map<String, dynamic> _$FavoriteToJson(Favorite instance) => <String, dynamic>{
-  'branchId': instance.branchId,
-  'createdAt': instance.createdAt,
+  'branch_id': instance.branchId,
+  'created_at': instance.createdAt,
   'devotion': instance.devotion?.toJson(),
-  'devotionId': instance.devotionId,
+  'devotion_id': instance.devotionId,
   'id': instance.id,
-  'organisationId': instance.organisationId,
-  'userId': instance.userId,
+  'organisation_id': instance.organisationId,
+  'user_id': instance.userId,
 };

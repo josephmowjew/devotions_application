@@ -13,7 +13,4 @@ AccountLockedDto _$AccountLockedDtoFromJson(Map<String, dynamic> json) =>
     );
 
 Map<String, dynamic> _$AccountLockedDtoToJson(AccountLockedDto instance) =>
-    <String, dynamic>{
-      'status': instance.status,
-      'message': instance.message,
-    };
+    <String, dynamic>{'status': instance.status, 'message': instance.message};
