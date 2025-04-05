@@ -67,21 +67,35 @@ class DevotionsRemoteDataSourceImpl implements DevotionsRemoteDataSource {
   ) async {
     final url = Uri.parse(DevotionsUrls.createDevotion);
     try {
+      // Create a complete request body with all needed fields
+      final requestBody = {
+        ...devotion.toJson(),
+        'organisation_id': organisationId,
+        'branch_id': branchId,
+      };
+
+      print('📱 DEBUG - Sending create devotion request: $requestBody');
+
       final response = await HttpUtils.post(
         url,
         client,
-        body: devotion.toJson(),
+        body: requestBody,
         headers: {'Content-Type': 'application/json'},
+      );
+
+      print(
+        '📱 DEBUG - Create devotion response: ${response.statusCode}, ${response.body}',
       );
 
       if (response.statusCode == 201) {
         return Devotion.fromJson(json.decode(response.body));
       } else {
         throw ServerException(
-          'Failed to create devotion: ${response.statusCode}',
+          'Failed to create devotion: ${response.statusCode} - ${response.body}',
         );
       }
     } catch (e) {
+      print('📱 DEBUG - Error in createDevotion: $e');
       throw ServerException('Network or parsing error: ${e.toString()}');
     }
   }

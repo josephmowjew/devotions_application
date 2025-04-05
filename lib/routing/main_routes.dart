@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:devotions_app/pages/devotions/devotions_page.dart';
+import 'package:devotions_app/pages/devotions/create/create_devotion_page.dart';
 import 'package:devotions_app/shared/layouts/default_layout.dart';
+import 'package:devotions_app/shared/repositories/devotions_repository.dart';
+import 'package:provider/provider.dart';
 // These imports will be uncommented when the files are created
 // import 'package:devotions_app/pages/home/home.dart';
 // import 'package:devotions_app/pages/prayer_activities/prayer_activities.dart';
@@ -9,6 +12,7 @@ import 'package:go_router/go_router.dart';
 
 class AppRoutes {
   static const String devotions = '/devotions';
+  static const String createDevotion = '/devotions/create';
   // These will be uncommented when the pages are created
   // static const String home = '/home';
   // static const String prayerActivities = '/prayer_activities';
@@ -28,7 +32,15 @@ class MainRoutes {
               child: PopScope(canPop: false, child: DevotionsPage()),
             ),
           ),
-      routes: const [],
+      routes: [
+        GoRoute(
+          path: 'create',
+          pageBuilder:
+              (context, state) => NoTransitionPage(
+                child: DefaultLayout(child: CreateDevotionPage()),
+              ),
+        ),
+      ],
     ),
     // These routes will be uncommented when the pages are created
     /*

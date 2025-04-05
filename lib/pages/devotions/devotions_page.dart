@@ -1,9 +1,12 @@
 import 'package:devotions_app/pages/devotions/blocs/devotions_bloc.dart';
 import 'package:devotions_app/pages/devotions/views/devotions_list_view.dart';
+import 'package:devotions_app/pages/devotions/create/create_devotion_page.dart';
 import 'package:devotions_app/shared/repositories/devotions_repository.dart';
 import 'package:devotions_app/shared/blocs/token_bloc/token_bloc.dart';
+import 'package:devotions_app/routing/main_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 /// The main page for viewing and managing devotions.
 class DevotionsPage extends StatelessWidget {
@@ -28,6 +31,16 @@ class DevotionsPage extends StatelessWidget {
     print(
       '📱 DEBUG - Using orgId=$orgId, branchId=$branchId for DevotionsBloc',
     );
+
+    // Debug info about repository
+    try {
+      final repository = context.read<DevotionsRepository>();
+      print(
+        '📱 DEBUG - DevotionsRepository accessed in DevotionsPage: ${repository.hashCode}',
+      );
+    } catch (e) {
+      print('📱 DEBUG - Error accessing DevotionsRepository: $e');
+    }
 
     return BlocProvider(
       create: (context) {
@@ -96,13 +109,43 @@ class DevotionsPage extends StatelessWidget {
           ],
         ),
         body: const DevotionsListView(),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            // Navigate to create devotion page
+        floatingActionButton: Builder(
+          builder: (context) {
+            // Use Builder to get a context that has access to the BlocProvider
+            return FloatingActionButton(
+              onPressed: () async {
+                // Make sure we capture these values first
+                final bloc = context.read<DevotionsBloc>();
+                final currentTokenState = context.read<TokenCubit>().state;
+                final currentOrgId =
+                    currentTokenState.orgId != null
+                        ? currentTokenState.orgId.toString()
+                        : '';
+                final currentBranchId = currentTokenState.branch ?? '';
+
+                print('📱 DEBUG - Navigating to create devotion page');
+                print('📱 DEBUG - Current DevotionsBloc: ${bloc.hashCode}');
+
+                // Navigate to create devotion page using GoRouter
+                final result = await context.push(AppRoutes.createDevotion);
+
+                // If creation was successful, refresh the list
+                if (result == true) {
+                  print('📱 DEBUG - New devotion created, refreshing list');
+                  bloc.fetchDevotions(
+                    page: 1,
+                    filters: {
+                      'organisationId': currentOrgId,
+                      'branchId': currentBranchId,
+                    },
+                  );
+                }
+              },
+              backgroundColor: Colors.indigo.shade600,
+              elevation: 2,
+              child: const Icon(Icons.add, color: Colors.white),
+            );
           },
-          backgroundColor: Colors.indigo.shade600,
-          elevation: 2,
-          child: const Icon(Icons.add, color: Colors.white),
         ),
       ),
     );
