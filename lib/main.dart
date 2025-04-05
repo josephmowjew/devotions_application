@@ -1,4 +1,3 @@
-import 'package:devotions_app/pages/devotions/devotions_page.dart';
 import 'package:devotions_app/pages/authentication/blocs/login/login_bloc.dart';
 import 'package:devotions_app/pages/authentication/blocs/login/cubit/login_form_cubit.dart';
 import 'package:devotions_app/shared/repositories/devotions_repository.dart';

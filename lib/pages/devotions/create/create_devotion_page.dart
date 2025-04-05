@@ -101,15 +101,7 @@ class _CreateDevotionPageState extends State<CreateDevotionPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Debug log for provider access
-    try {
-      final tokenCubit = context.read<TokenCubit>();
-     
-      final repository = context.read<DevotionsRepository>();
-    } catch (e) {
-      print('📱 DEBUG - Error accessing providers in CreateDevotionPage: $e');
-    }
-
+   
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
       appBar: AppBar(

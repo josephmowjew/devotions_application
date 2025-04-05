@@ -1,10 +1,10 @@
-import 'dart:developer';
 import 'package:devotions_app/core/errors/errors_exports.dart';
 import 'package:devotions_app/shared/repositories/devotions_repository.dart';
 import 'package:devotions_app/shared/models/devotion.dart';
 import 'package:lyvepulse_components/blocs/paginated_bloc/paginated_bloc.dart';
 import 'package:lyvepulse_components/blocs/paginated_bloc/paginated_state.dart';
 import 'package:lyvepulse_components/utils/pair.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// BLoC responsible for managing paginated Devotions data.
 class DevotionsBloc extends PaginatedBloc<Devotion> {
@@ -12,18 +12,16 @@ class DevotionsBloc extends PaginatedBloc<Devotion> {
   static const int pageSize = 10;
 
   /// Constructs the DevotionsBloc with a required repository.
-  DevotionsBloc({required this.devotionsRepository}) : super() {
-    // Set initial state
-    emit(const PaginatedInitial<Devotion>());
-  }
+  DevotionsBloc({required this.devotionsRepository}) : super();
 
-  @override
+
   Future<void> loadPage({
     required int page,
     required Map<String, dynamic> filters,
     String? searchQuery,
     String? sortField,
     bool ascending = true,
+    required Emitter<PaginatedState<Devotion>> emit,
   }) async {
     try {
       // Emit loading state while preserving current items
@@ -111,8 +109,6 @@ class DevotionsBloc extends PaginatedBloc<Devotion> {
         branchId: branchId,
       );
 
-     
-
       if (responseList.isEmpty) {
         return Pair(0, []);
       }
@@ -137,14 +133,10 @@ class DevotionsBloc extends PaginatedBloc<Devotion> {
         ];
       } else if (responseObj.content is Devotion) {
         devotions = [responseObj.content as Devotion];
-      } else {
-       
       }
 
       // Get total count for pagination
       final totalElements = responseObj.totalElements ?? devotions.length;
-
-     
       return Pair(totalElements, devotions);
     } catch (e) {
       final errorMessage = (e is ServerException) ? e.message : e.toString();
