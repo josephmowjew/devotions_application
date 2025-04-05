@@ -69,15 +69,10 @@ class _CreateDevotionPageState extends State<CreateDevotionPage> {
         prayer: _prayerController.text,
       );
 
-      print('📱 DEBUG - Creating devotion: ${devotion.toJson()}');
-      print('📱 DEBUG - with orgId=$orgId, branchId=$branchId');
 
       // Submit to repository
-      print('📱 DEBUG - About to access DevotionsRepository from context');
       final repository = context.read<DevotionsRepository>();
-      print(
-        '📱 DEBUG - Repository found with hashCode: ${repository.hashCode}',
-      );
+    
 
       await repository.createDevotion(devotion, orgId, branchId);
 
@@ -92,7 +87,6 @@ class _CreateDevotionPageState extends State<CreateDevotionPage> {
         context.pop(true);
       }
     } catch (e) {
-      print('📱 DEBUG - Error creating devotion: $e');
       setState(() {
         _errorMessage = 'Error creating devotion: ${e.toString()}';
       });
@@ -110,14 +104,8 @@ class _CreateDevotionPageState extends State<CreateDevotionPage> {
     // Debug log for provider access
     try {
       final tokenCubit = context.read<TokenCubit>();
-      print(
-        '📱 DEBUG - TokenCubit accessed in CreateDevotionPage: ${tokenCubit.hashCode}',
-      );
-
+     
       final repository = context.read<DevotionsRepository>();
-      print(
-        '📱 DEBUG - DevotionsRepository accessed in CreateDevotionPage: ${repository.hashCode}',
-      );
     } catch (e) {
       print('📱 DEBUG - Error accessing providers in CreateDevotionPage: $e');
     }

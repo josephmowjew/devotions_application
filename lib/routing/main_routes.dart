@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:devotions_app/pages/devotions/devotions_page.dart';
 import 'package:devotions_app/pages/devotions/create/create_devotion_page.dart';
 import 'package:devotions_app/shared/layouts/default_layout.dart';
-import 'package:devotions_app/shared/repositories/devotions_repository.dart';
-import 'package:provider/provider.dart';
 // These imports will be uncommented when the files are created
 // import 'package:devotions_app/pages/home/home.dart';
 // import 'package:devotions_app/pages/prayer_activities/prayer_activities.dart';

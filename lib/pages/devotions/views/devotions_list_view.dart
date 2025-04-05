@@ -10,6 +10,8 @@ import 'package:flutter_ui_modules/modules/cards/reusable_card.dart';
 import 'package:flutter_ui_modules/modules/cards/card_header.dart';
 import 'package:flutter_ui_modules/modules/cards/card_body.dart';
 import 'package:flutter_ui_modules/modules/cards/card_footer.dart';
+import 'package:lyvepulse_components/blocs/paginated_bloc/paginated_state.dart';
+import 'package:lyvepulse_components/blocs/paginated_bloc/paginated_event.dart';
 
 /// A view that displays a list of devotions using ReusableCard component.
 class DevotionsListView extends StatelessWidget {
@@ -17,27 +19,21 @@ class DevotionsListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<DevotionsBloc, DevotionsState>(
+    return BlocBuilder<DevotionsBloc, PaginatedState<Devotion>>(
       builder: (context, state) {
-        // Debug logging to understand what state we're getting
-        print('📱 DEBUG - DevotionsListView state: ${state.runtimeType}');
-
         // Initial state - show loading
-        if (state is DevotionsInitial) {
-          print('📱 DEBUG - DevotionsListView rendering Initial state');
+        if (state is PaginatedInitial<Devotion>) {
           return const LoadingIndicator();
         }
 
         // Loading state
-        if (state is DevotionsLoading) {
-          print('📱 DEBUG - DevotionsListView rendering Loading state');
+        if (state is PaginatedLoading<Devotion>) {
           return const LoadingIndicator();
         }
 
         // Error state
-        if (state is DevotionsError) {
-          print('📱 DEBUG - DevotionsListView rendering Error state');
-          final errorMessage = 'Error: ${state.message}';
+        if (state is PaginatedFailure<Devotion>) {
+          final errorMessage = 'Error: ${state.error}';
 
           return ErrorView(
             message: errorMessage,
@@ -48,43 +44,26 @@ class DevotionsListView extends StatelessWidget {
                   tokenState.orgId != null ? tokenState.orgId.toString() : '';
               final branchId = tokenState.branch ?? '';
 
-              // Call appropriate method to refresh with actual org/branch values
-              bloc.fetchDevotions(
-                page: 1,
+              // Refresh with current filters
+              bloc.add(ApplyFiltersAndSorting(
                 filters: {'organisationId': orgId, 'branchId': branchId},
-              );
+              ));
             },
           );
         }
 
-        // Loaded state with data
-        if (state is DevotionsLoaded) {
-          print('📱 DEBUG - DevotionsListView rendering Loaded state');
+        // Success state with data
+        if (state is PaginatedSuccess<Devotion>) {
 
           // Check if items are empty
           if (state.items.isEmpty) {
-            print(
-              '📱 DEBUG - DevotionsListView rendering Empty state (items empty)',
-            );
+          
             return const EmptyStateView(
               message: "No devotions available.",
               icon: Icons.book_outlined,
             );
           }
 
-          print('📱 DEBUG - Devotions loaded: ${state.items.length}');
-
-          // Debug log to inspect devotion data
-          state.items.forEach((devotion) {
-            print('📱 DEBUG - Devotion: ${devotion.toJson()}');
-            print('📱 DEBUG - title: ${devotion.title}');
-            print('📱 DEBUG - devotion text: ${devotion.devotion}');
-            print('📱 DEBUG - scriptureReading: ${devotion.scriptureReading}');
-            print('📱 DEBUG - scriptureText: ${devotion.scriptureText}');
-            print('📱 DEBUG - prayer: ${devotion.prayer}');
-            print('📱 DEBUG - createdAt: ${devotion.createdAt}');
-            print('📱 DEBUG - createdBy: ${devotion.createdBy}');
-          });
 
           try {
             // Create a beautiful UI with modern styling
@@ -149,7 +128,6 @@ class DevotionsListView extends StatelessWidget {
               ),
             );
           } catch (e) {
-            print('📱 DEBUG - Error rendering loaded state: $e');
             return ErrorView(
               message: 'Error displaying devotions: $e',
               onRetry: () {
@@ -159,19 +137,15 @@ class DevotionsListView extends StatelessWidget {
                     tokenState.orgId != null ? tokenState.orgId.toString() : '';
                 final branchId = tokenState.branch ?? '';
 
-                bloc.fetchDevotions(
-                  page: 1,
+                bloc.add(ApplyFiltersAndSorting(
                   filters: {'organisationId': orgId, 'branchId': branchId},
-                );
+                ));
               },
             );
           }
         }
 
-        // If we reach here, render fallback placeholder and debug
-        print(
-          '📱 DEBUG - No matching state found, showing placeholder with manual refresh button',
-        );
+      
         return Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -188,11 +162,10 @@ class DevotionsListView extends StatelessWidget {
                           : '';
                   final branchId = tokenState.branch ?? '';
 
-                  // Force refresh
-                  bloc.fetchDevotions(
-                    page: 1,
+                  // Force refresh with current filters
+                  bloc.add(ApplyFiltersAndSorting(
                     filters: {'organisationId': orgId, 'branchId': branchId},
-                  );
+                  ));
                 },
                 child: const Text('Refresh'),
               ),
