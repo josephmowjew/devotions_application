@@ -74,7 +74,6 @@ class DevotionsRemoteDataSourceImpl implements DevotionsRemoteDataSource {
         'branch_id': branchId,
       };
 
-      print('📱 DEBUG - Sending create devotion request: $requestBody');
 
       final response = await HttpUtils.post(
         url,
@@ -83,9 +82,7 @@ class DevotionsRemoteDataSourceImpl implements DevotionsRemoteDataSource {
         headers: {'Content-Type': 'application/json'},
       );
 
-      print(
-        '📱 DEBUG - Create devotion response: ${response.statusCode}, ${response.body}',
-      );
+     
 
       if (response.statusCode == 201) {
         return Devotion.fromJson(json.decode(response.body));
@@ -95,7 +92,6 @@ class DevotionsRemoteDataSourceImpl implements DevotionsRemoteDataSource {
         );
       }
     } catch (e) {
-      print('📱 DEBUG - Error in createDevotion: $e');
       throw ServerException('Network or parsing error: ${e.toString()}');
     }
   }
