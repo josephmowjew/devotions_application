@@ -1,7 +1,6 @@
-import 'package:devotions_app/pages/devotions/blocs/devotions_bloc.dart';
-import 'package:devotions_app/pages/devotions/views/devotions_list_view.dart';
-import 'package:devotions_app/pages/devotions/create/create_devotion_page.dart';
-import 'package:devotions_app/shared/repositories/devotions_repository.dart';
+import 'package:devotions_app/pages/activity_notes/blocs/activity_note_bloc.dart';
+import 'package:devotions_app/pages/activity_notes/views/activity_notes_list_view.dart';
+import 'package:devotions_app/shared/repositories/activity_note_repository.dart';
 import 'package:devotions_app/shared/blocs/token_bloc/token_bloc.dart';
 import 'package:devotions_app/routing/main_routes.dart';
 import 'package:flutter/material.dart';
@@ -10,31 +9,31 @@ import 'package:go_router/go_router.dart';
 import 'package:lyvepulse_components/blocs/paginated_bloc/paginated_event.dart';
 import 'package:lyvepulse_components/blocs/paginated_bloc/paginated_state.dart';
 
-/// The main page for viewing and managing devotions.
-class DevotionsPage extends StatefulWidget {
-  /// Creates a devotions page.
-  const DevotionsPage({super.key});
-
-  /// Route name for navigation.
-  static const String routeName = '/devotions';
-
-  static const String activityNotesRouteName = '/activity-notes';
+/// The main page for viewing and managing activity notes.
+class ActivityNotesPage extends StatefulWidget {
+  /// Creates an activity notes page.
+  const ActivityNotesPage({super.key});
 
   @override
-  State<DevotionsPage> createState() => _DevotionsPageState();
+  State<ActivityNotesPage> createState() => _ActivityNotesPageState();
 }
 
-class _DevotionsPageState extends State<DevotionsPage> {
+class _ActivityNotesPageState extends State<ActivityNotesPage> {
   // Controller for search field
   final TextEditingController _searchController = TextEditingController();
-  
+
   // Current filters
   Map<String, dynamic> _currentFilters = {};
-  
+
   @override
   void initState() {
     super.initState();
     _searchController.addListener(_onSearchChanged);
+
+    // Ensure TokenCubit is initialized
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<TokenCubit>().loadTokenAndBranch();
+    });
   }
 
   @override
@@ -47,16 +46,16 @@ class _DevotionsPageState extends State<DevotionsPage> {
     // Debounce search input
     Future.delayed(const Duration(milliseconds: 500), () {
       if (!mounted) return;
-      
-      final bloc = context.read<DevotionsBloc>();
+
+      final bloc = context.read<ActivityNoteBloc>();
       final tokenState = context.read<TokenCubit>().state;
-      
+
       final filters = {
-        'organisationId': tokenState.orgId?.toString() ?? '',
+        'organizationId': tokenState.orgId ?? 0,
         'branchId': tokenState.branch ?? '',
         ..._currentFilters,
       };
-      
+
       bloc.add(ApplyFiltersAndSorting(
         filters: filters,
         searchQuery: _searchController.text,
@@ -65,21 +64,26 @@ class _DevotionsPageState extends State<DevotionsPage> {
   }
 
   Future<void> _showFilterDialog() async {
-    // Example filter options - customize based on your needs
+    // Example filter options for activity notes
     final result = await showDialog<Map<String, dynamic>>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Filter Devotions'),
+        title: const Text('Filter Activity Notes'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Add your filter widgets here
-            // Example:
             ListTile(
               title: const Text('Date Range'),
               trailing: const Icon(Icons.calendar_today),
               onTap: () {
                 // Implement date range picker
+              },
+            ),
+            ListTile(
+              title: const Text('Note Type'),
+              trailing: const Icon(Icons.note_alt_outlined),
+              onTap: () {
+                // Implement note type selection
               },
             ),
             ListTile(
@@ -111,42 +115,41 @@ class _DevotionsPageState extends State<DevotionsPage> {
 
     if (result != null) {
       setState(() => _currentFilters = result);
-      
-      final bloc = context.read<DevotionsBloc>();
+
+      final bloc = context.read<ActivityNoteBloc>();
       final tokenState = context.read<TokenCubit>().state;
-      
+
       final filters = {
-        'organisationId': tokenState.orgId?.toString() ?? '',
+        'organizationId': tokenState.orgId ?? 0,
         'branchId': tokenState.branch ?? '',
         ...result,
       };
-      
+
       bloc.add(ApplyFiltersAndSorting(filters: filters));
     }
   }
 
   @override
   Widget build(BuildContext context) {
-
     final tokenState = context.watch<TokenCubit>().state;
-    final orgId = tokenState.orgId?.toString() ?? '';
+    final orgId = tokenState.orgId ?? 0;
     final branchId = tokenState.branch ?? '';
 
     return BlocProvider(
       create: (context) {
-        final bloc = DevotionsBloc(
-          devotionsRepository: context.read<DevotionsRepository>(),
+        final bloc = ActivityNoteBloc(
+          repository: context.read<ActivityNoteRepository>(),
         );
 
         WidgetsBinding.instance.addPostFrameCallback((_) {
           bloc.add(ApplyFiltersAndSorting(
-            filters: {'organisationId': orgId, 'branchId': branchId},
+            filters: {'organizationId': orgId, 'branchId': branchId},
           ));
         });
 
         return bloc;
       },
-      child: BlocListener<DevotionsBloc, PaginatedState>(
+      child: BlocListener<ActivityNoteBloc, PaginatedState>(
         listener: (context, state) {
           if (state is PaginatedFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -157,10 +160,10 @@ class _DevotionsPageState extends State<DevotionsPage> {
                   label: 'Retry',
                   textColor: Colors.white,
                   onPressed: () {
-                    context.read<DevotionsBloc>().add(
+                    context.read<ActivityNoteBloc>().add(
                           ApplyFiltersAndSorting(
                             filters: {
-                              'organisationId': orgId,
+                              'organizationId': orgId,
                               'branchId': branchId,
                               ..._currentFilters,
                             },
@@ -177,7 +180,7 @@ class _DevotionsPageState extends State<DevotionsPage> {
           backgroundColor: Colors.grey.shade50,
           appBar: AppBar(
             title: Text(
-              'Devotions',
+              'Activity Notes',
               style: TextStyle(
                 fontWeight: FontWeight.w600,
                 color: Colors.indigo.shade900,
@@ -195,14 +198,14 @@ class _DevotionsPageState extends State<DevotionsPage> {
                 onPressed: () {
                   showSearch(
                     context: context,
-                    delegate: _DevotionsSearchDelegate(
+                    delegate: _ActivityNotesSearchDelegate(
                       searchController: _searchController,
                       onSearch: (query) {
-                        final bloc = context.read<DevotionsBloc>();
+                        final bloc = context.read<ActivityNoteBloc>();
                         bloc.add(
                           ApplyFiltersAndSorting(
                             filters: {
-                              'organisationId': orgId,
+                              'organizationId': orgId,
                               'branchId': branchId,
                               ..._currentFilters,
                             },
@@ -226,11 +229,11 @@ class _DevotionsPageState extends State<DevotionsPage> {
               IconButton(
                 icon: Icon(Icons.refresh_rounded, color: Colors.indigo.shade800),
                 onPressed: () {
-                  final bloc = context.read<DevotionsBloc>();
+                  final bloc = context.read<ActivityNoteBloc>();
                   bloc.add(
                     ApplyFiltersAndSorting(
                       filters: {
-                        'organisationId': orgId,
+                        'organizationId': orgId,
                         'branchId': branchId,
                         ..._currentFilters,
                       },
@@ -243,11 +246,11 @@ class _DevotionsPageState extends State<DevotionsPage> {
           ),
           body: RefreshIndicator(
             onRefresh: () async {
-              final bloc = context.read<DevotionsBloc>();
+              final bloc = context.read<ActivityNoteBloc>();
               bloc.add(
                 ApplyFiltersAndSorting(
                   filters: {
-                    'organisationId': orgId,
+                    'organizationId': orgId,
                     'branchId': branchId,
                     ..._currentFilters,
                   },
@@ -255,26 +258,24 @@ class _DevotionsPageState extends State<DevotionsPage> {
                 ),
               );
             },
-            child: const DevotionsListView(),
+            child: const ActivityNotesListView(),
           ),
           floatingActionButton: Builder(
             builder: (context) {
               return FloatingActionButton(
                 onPressed: () async {
-                  final bloc = context.read<DevotionsBloc>();
+                  final bloc = context.read<ActivityNoteBloc>();
                   final currentTokenState = context.read<TokenCubit>().state;
-                  final currentOrgId = currentTokenState.orgId?.toString() ?? '';
+                  final currentOrgId = currentTokenState.orgId ?? 0;
                   final currentBranchId = currentTokenState.branch ?? '';
 
-                 
-
-                  final result = await context.push(AppRoutes.createDevotion);
+                  final result = await context.push(AppRoutes.createActivityNote);
 
                   if (result == true) {
                     bloc.add(
                       ApplyFiltersAndSorting(
                         filters: {
-                          'organisationId': currentOrgId,
+                          'organizationId': currentOrgId,
                           'branchId': currentBranchId,
                           ..._currentFilters,
                         },
@@ -295,12 +296,12 @@ class _DevotionsPageState extends State<DevotionsPage> {
   }
 }
 
-/// Search delegate for devotions search functionality
-class _DevotionsSearchDelegate extends SearchDelegate<String> {
+/// Search delegate for activity notes search functionality
+class _ActivityNotesSearchDelegate extends SearchDelegate<String> {
   final TextEditingController searchController;
   final Function(String) onSearch;
 
-  _DevotionsSearchDelegate({
+  _ActivityNotesSearchDelegate({
     required this.searchController,
     required this.onSearch,
   });
@@ -333,7 +334,7 @@ class _DevotionsSearchDelegate extends SearchDelegate<String> {
   Widget buildResults(BuildContext context) {
     searchController.text = query;
     onSearch(query);
-    return const DevotionsListView();
+    return const ActivityNotesListView();
   }
 
   @override

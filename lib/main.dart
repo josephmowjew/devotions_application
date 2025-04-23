@@ -9,6 +9,9 @@ import 'package:devotions_app/shared/datasources/authentication_service/authenti
 import 'package:devotions_app/shared/datasources/authentication_service/authentication_repository/authentication_repository_impl.dart';
 import 'package:devotions_app/shared/datasources/authentication_service/authentication_provider/authentication_provider.dart';
 import 'package:devotions_app/shared/datasources/authentication_service/authentication_provider/authentication_provider_impl.dart';
+import 'package:devotions_app/shared/repositories/activity_note_repository.dart';
+import 'package:devotions_app/shared/repositories/activity_note_repository_impl.dart';
+import 'package:devotions_app/shared/datasources/activity_note_remote_data_source_impl.dart';
 import 'package:devotions_app/routing/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -48,6 +51,12 @@ class MyApp extends StatelessWidget {
               (context) => AuthenticationRepositoryImpl(
                 provider: context.read<AuthenticationProvider>(),
               ),
+        ),
+        // Add ActivityNoteRepository provider
+        RepositoryProvider<ActivityNoteRepository>(
+          create: (context) => ActivityNoteRepositoryImpl(
+            ActivityNoteRemoteDataSourceImpl(http.Client()),
+          ),
         ),
       ],
       child: MultiBlocProvider(

@@ -9,7 +9,7 @@ import 'package:go_router/go_router.dart';
 /// A page that allows creating a new devotion
 class CreateDevotionPage extends StatefulWidget {
   /// Creates a page for creating a new devotion
-  const CreateDevotionPage({Key? key}) : super(key: key);
+  const CreateDevotionPage({super.key});
 
   /// Route name for navigation
   static const String routeName = '/devotions/create';

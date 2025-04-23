@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:devotions_app/pages/devotions/devotions_page.dart';
 import 'package:devotions_app/pages/devotions/create/create_devotion_page.dart';
+import 'package:devotions_app/pages/activity_notes/activity_notes_page.dart';
+import 'package:devotions_app/pages/activity_notes/create/create_activity_note_page.dart';
 import 'package:devotions_app/shared/layouts/default_layout.dart';
 // These imports will be uncommented when the files are created
 // import 'package:devotions_app/pages/home/home.dart';
@@ -11,32 +13,50 @@ import 'package:go_router/go_router.dart';
 class AppRoutes {
   static const String devotions = '/devotions';
   static const String createDevotion = '/devotions/create';
+  static const String activityNotes = '/activity-notes';
+  static const String createActivityNote = '/activity-notes/create';
   // These will be uncommented when the pages are created
   // static const String home = '/home';
   // static const String prayerActivities = '/prayer_activities';
   // static const String profile = '/profile';
 
   // Default route that will be used after login
-  static const String initial = devotions;
+  static const String initial = activityNotes;
 }
 
 class MainRoutes {
   static List<GoRoute> routes = [
     GoRoute(
       path: AppRoutes.devotions,
-      pageBuilder:
-          (context, state) => NoTransitionPage(
-            child: DefaultLayout(
-              child: PopScope(canPop: false, child: DevotionsPage()),
-            ),
-          ),
+      pageBuilder: (context, state) => NoTransitionPage(
+        child: DefaultLayout(
+          child: PopScope(canPop: false, child: DevotionsPage()),
+        ),
+      ),
       routes: [
         GoRoute(
           path: 'create',
-          pageBuilder:
-              (context, state) => NoTransitionPage(
-                child: DefaultLayout(child: CreateDevotionPage()),
-              ),
+          pageBuilder: (context, state) => NoTransitionPage(
+            child: DefaultLayout(child: CreateDevotionPage()),
+          ),
+        ),
+      ],
+    ),
+    GoRoute(
+      path: AppRoutes.activityNotes,
+      pageBuilder: (context, state) => NoTransitionPage(
+        child: DefaultLayout(
+          child: PopScope(canPop: false, child: ActivityNotesPage()),
+        ),
+      ),
+      routes: [
+        GoRoute(
+          path: 'create',
+          pageBuilder: (context, state) => NoTransitionPage(
+            child: DefaultLayout(
+              child: CreateActivityNotePage(),
+            ),
+          ),
         ),
       ],
     ),

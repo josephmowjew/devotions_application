@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:devotions_app/pages/authentication/components/widgets/authentication_form_section.dart';
-import 'package:devotions_app/pages/authentication/components/widgets/authentication_image_section.dart';
 import 'package:devotions_app/shared/utils/get_size_map.dart';
 
 import 'package:lyvepulse_components/lyvepulse_components.dart';

@@ -15,7 +15,7 @@ import 'package:lyvepulse_components/blocs/paginated_bloc/paginated_event.dart';
 
 /// A view that displays a list of devotions using ReusableCard component.
 class DevotionsListView extends StatelessWidget {
-  const DevotionsListView({Key? key}) : super(key: key);
+  const DevotionsListView({super.key});
 
   @override
   Widget build(BuildContext context) {

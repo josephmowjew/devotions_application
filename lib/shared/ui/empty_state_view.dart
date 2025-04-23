@@ -13,11 +13,11 @@ class EmptyStateView extends StatelessWidget {
 
   /// Creates an empty state view.
   const EmptyStateView({
-    Key? key,
+    super.key,
     required this.message,
     this.icon = Icons.inbox_outlined,
     this.action,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
